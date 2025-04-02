@@ -4,7 +4,7 @@ import logger from "koa-logger";
 import json from "koa-json";
 import { router as articles } from "./routes/articles";
 
-  
+
 const app: Koa = new Koa();
 //const router: Router = new Router();
 
@@ -24,18 +24,18 @@ app.use(articles.middleware());
 
 
 app.use(async (ctx: RouterContext, next: any) => {
-  try {
-    await next();
-    console.log(ctx.status)
-    if(ctx.status === 404){
-      ctx.body = {err: "Resource not found"};
+    try {
+        await next();
+        console.log(ctx.status)
+        if (ctx.status === 404) {
+            ctx.body = { err: "Resource not found" };
+        }
+    } catch (err: any) {
+        ctx.body = { err: err };
     }
-  } catch(err: any) {
-    ctx.body = {err: err};
-  }
-  
+
 });
 
 app.listen(10888, () => {
-  console.log("Koa Started");
+    console.log("Koa Started");
 });
