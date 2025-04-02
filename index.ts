@@ -1,47 +1,41 @@
-const Koa = require("koa");
-import { RouterContext } from "koa-router";
-const Router = require("koa-router");
-const bodyParser = require("koa-bodyparser");
-const logger = require("koa-logger");
-const json = require("koa-json");
-const app = new Koa();
-const router = new Router();
+import Koa from "koa";
+import Router, { RouterContext } from "koa-router";
+import logger from "koa-logger";
+import json from "koa-json";
+import { router as articles } from "./routes/articles";
 
-let films: string[] = [
-    "Titanic",
-    "House of Murdeur",
-    "Man in Wilds",
-    "Super 1",
-];
+  
+const app: Koa = new Koa();
+//const router: Router = new Router();
 
-router.get("/film", async (ctx: RouterContext, next: any) => {
-    ctx.body = { films: films };
-    await next();
-});
+/*const welcomeAPI = async (ctx: RouterContext, next:any) => {
+  ctx.body = {message: "Welcome to the blog API!"};
+  await next();
+}
 
-router.post("/film", async (ctx: RouterContext, next: any) => {
-    // Get the film title from the request body
-    let film : string [];
-    const title:any = ctx.request.body;
+router.get('/api/v1', welcomeAPI);*/
+// For Document:
 
-    // Add the new film to the array
-    film =[...films, title.title];
-
-    // Return success response with the updated list
-    ctx.status = 201; // Created
-    ctx.body = {
-        message: "Film added successfully",
-        film,
-    };
-
-    await next();
-});
-
-
-app.use(bodyParser()); 
-app.use(json());
 app.use(logger());
-app.use(router.routes()).use(router.allowedMethods());
+app.use(json());
+app.use(articles.middleware());
+
+
+
+
+app.use(async (ctx: RouterContext, next: any) => {
+  try {
+    await next();
+    console.log(ctx.status)
+    if(ctx.status === 404){
+      ctx.body = {err: "Resource not found"};
+    }
+  } catch(err: any) {
+    ctx.body = {err: err};
+  }
+  
+});
+
 app.listen(10888, () => {
-    console.log("Koa Started on port 10888");
+  console.log("Koa Started");
 });
