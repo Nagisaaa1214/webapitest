@@ -6,7 +6,7 @@ import bodyParser from "koa-bodyparser";
 import passport from "koa-passport";
 import { router as articles } from "./routes/articles";
 import { router as special } from "./routes/specials";
-
+import serve from 'koa-static';
 
 const app: Koa = new Koa();
 const welcomeAPI = async (ctx: RouterContext, next: any) => {
@@ -17,8 +17,8 @@ const welcomeAPI = async (ctx: RouterContext, next: any) => {
 };
 const router: Router = new Router();
 
-//router.get('/api/v1', welcomeAPI);
-
+router.get('/api/v1', welcomeAPI);
+app.use(serve('./docs'));
 app.use(json());
 app.use(logger());
 app.use(bodyParser());

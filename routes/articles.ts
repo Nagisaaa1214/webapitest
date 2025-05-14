@@ -1,6 +1,6 @@
 import Router, { RouterContext } from "koa-router";
 import bodyParser from "koa-bodyparser";
-import * as model from "../models/articles";
+import * as model from "../models/articles.model";
 import { basicAuth } from "../controllers/auth";
 import { validateArticle } from "../controllers/validation";
 
